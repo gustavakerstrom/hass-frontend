@@ -57,7 +57,8 @@ export class HaMoreInfoViewVacuumSegmentMapping extends LitElement {
   }
 
   private async _save() {
-    if (!this.params.entityId || !this._areaMapping) return;
+    if (!this.params.entityId || !this._areaMapping || this._submitting) return;
+
     this._error = undefined;
     this._submitting = true;
 
@@ -77,7 +78,6 @@ export class HaMoreInfoViewVacuumSegmentMapping extends LitElement {
         options_domain: "vacuum",
         options: options,
       });
-      this._dirty = false;
       fireEvent(this, "close-dialog");
     } catch (err: any) {
       this._error = err.message;
@@ -107,7 +107,8 @@ export class HaMoreInfoViewVacuumSegmentMapping extends LitElement {
         <div class="footer">
           <ha-button
             @click=${this._save}
-            .disabled=${!this._dirty || this._submitting}
+            .disabled=${!this._dirty}
+            .loading=${this._submitting}
           >
             ${this.hass.localize("ui.common.save")}
           </ha-button>
